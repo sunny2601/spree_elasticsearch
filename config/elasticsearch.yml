@@ -1,0 +1,11 @@
+default: &default
+  host: 'http://localhost:9200'
+
+test:
+  <<: *default
+
+staging:
+  <<: *default
+
+production:
+  <<: *default
