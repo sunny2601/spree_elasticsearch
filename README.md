@@ -1,7 +1,7 @@
 SpreeElasticsearch
 ==================
 
-Introduction goes here.
+WIP!  Still requires a lot of work before it is ready.
 
 Installation
 ------------
