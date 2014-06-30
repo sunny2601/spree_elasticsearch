@@ -5,6 +5,11 @@ Spree::Product.class_eval do
   index_name "#{ENV['RAILS_ENV'] || "development"}_#{Spree::Config.site_name.downcase.gsub " ","_"}"
   document_type 'product'
 
+  def self.es_search(query)
+    response = self.__elasticsearch__.search query
+    response.records
+  end
+
   def as_indexed_json(options={})
     if !self.images.empty?
       image_url = self.images.first.attachment.url

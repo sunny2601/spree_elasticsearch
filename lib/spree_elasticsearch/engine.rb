@@ -9,7 +9,8 @@ module SpreeElasticsearch
       g.test_framework :rspec
     end
 
-    config.autoload_paths += %W(#{config.root}/models/concerns)
+    puts "#{config.root}/lib"
+    config.autoload_paths += %W(#{config.root}/lib)
 
     def self.activate
       Dir.glob(File.join(File.dirname(__FILE__), '../../app/**/*_decorator*.rb')) do |c|

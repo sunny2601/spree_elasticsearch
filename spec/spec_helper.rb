@@ -18,6 +18,7 @@ require File.expand_path('../dummy/config/environment.rb',  __FILE__)
 require 'rspec/rails'
 require 'database_cleaner'
 require 'ffaker'
+#require 'elasticsearch-rails'
 
 # Requires supporting ruby files with custom matchers and macros, etc,
 # in spec/support/ and its subdirectories.
@@ -64,19 +65,21 @@ RSpec.configure do |config|
 
   # Ensure Suite is set to use transactions for speed.
   config.before :suite do
-    DatabaseCleaner.strategy = :transaction
-    DatabaseCleaner.clean_with :truncation
+    DatabaseCleaner.strategy = :deletion
+    DatabaseCleaner.clean_with(:truncation)
   end
 
   # Before each spec check if it is a Javascript test and switch between using database transactions or not where necessary.
   config.before :each do
     DatabaseCleaner.strategy = example.metadata[:js] ? :truncation : :transaction
     DatabaseCleaner.start
+    Spree::Core::Search::Base.send(:public, *Spree::Core::Search::Base.protected_instance_methods)
   end
 
   # After each spec clean the database.
   config.after :each do
     DatabaseCleaner.clean
+    Elasticsearch::Model.client.indices.delete index: "#{ENV['RAILS_ENV'] || "development"}_#{Spree::Config.site_name.downcase.gsub " ","_"}"
   end
 
   config.fail_fast = ENV['FAIL_FAST'] || false

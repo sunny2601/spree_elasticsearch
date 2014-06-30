@@ -7,6 +7,8 @@ if config_file.file?
   config = if config then config else nil end
 end
 
+Spree::Config.searcher_class = "Elasticsearch"
+
 Elasticsearch::Model.client = if config.nil? then Elasticsearch::Client.new else Elasticsearch::Client.new config end
 begin
   Elasticsearch::Model.client.indices.create index: "#{ENV['RAILS_ENV'] || "development"}_#{Spree::Config.site_name.downcase.gsub " ","_"}"

@@ -7,4 +7,6 @@ gem 'spree_auth_devise', github: 'spree/spree_auth_devise', branch: '2-2-stable'
 gem 'elasticsearch-model'
 gem 'elasticsearch-rails'
 
+gem 'test_after_commit', :group => 'test'
+
 gemspec
