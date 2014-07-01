@@ -63,6 +63,30 @@ RSpec.configure do |config|
   # to setup a test will be unavailable to the browser, which runs under a separate server instance.
   config.use_transactional_fixtures = false
 
+  config.before :all do
+    begin
+      Elasticsearch::Model.client.indices.create index: "#{ENV['RAILS_ENV'] || "development"}_#{Spree::Config.site_name.downcase.gsub " ","_"}"
+    rescue
+    end
+    Elasticsearch::Model.client.indices.put_mapping type: 'product', body: {
+      product: {
+          properties: {
+            name: {
+              type: 'multi_field',
+              fields: {
+                name: { type: 'string', analyzer: 'english', index_options: 'offsets' },
+                na_name: { type: 'string', index: 'not_analyzed' }
+              }
+            },
+            taxons: {
+              type: 'string',
+              index: 'not_analyzed'
+            }
+          }
+        }
+      }
+  end
+
   # Ensure Suite is set to use transactions for speed.
   config.before :suite do
     DatabaseCleaner.strategy = :deletion
@@ -79,6 +103,9 @@ RSpec.configure do |config|
   # After each spec clean the database.
   config.after :each do
     DatabaseCleaner.clean
+  end
+
+  config.after :all do
     Elasticsearch::Model.client.indices.delete index: "#{ENV['RAILS_ENV'] || "development"}_#{Spree::Config.site_name.downcase.gsub " ","_"}"
   end
 

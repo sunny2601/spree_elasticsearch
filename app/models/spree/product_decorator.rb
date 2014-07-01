@@ -7,7 +7,7 @@ Spree::Product.class_eval do
 
   def self.es_search(query)
     response = self.__elasticsearch__.search query
-    response.records
+    response
   end
 
   def as_indexed_json(options={})
