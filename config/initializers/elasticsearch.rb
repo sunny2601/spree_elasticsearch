@@ -1,5 +1,3 @@
-require 'elasticsearch/model'
-
 config_file = ::Rails.root.join('config/elasticsearch.yml')
 
 if config_file.file?
