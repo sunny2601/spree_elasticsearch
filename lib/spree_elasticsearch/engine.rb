@@ -9,7 +9,6 @@ module SpreeElasticsearch
       g.test_framework :rspec
     end
 
-    puts "#{config.root}/lib"
     config.autoload_paths += %W(#{config.root}/lib)
 
     def self.activate

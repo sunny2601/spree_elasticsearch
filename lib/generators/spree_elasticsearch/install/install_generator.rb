@@ -2,6 +2,12 @@ module SpreeElasticsearch
   module Generators
     class InstallGenerator < Rails::Generators::Base
       source_root File.expand_path("../../templates", __FILE__)
+      def add_config
+        template "elasticsearch.yml.sample", "config/elasticsearch.yml"
+        template "index.yml.sample", "config/index.yml"
+        template "mapping.yml.sample", "config/mapping.yml"
+      end
+
       class_option :auto_run_migrations, :type => :boolean, :default => false
 
 
@@ -28,10 +34,6 @@ module SpreeElasticsearch
         end
       end
 
-      def add_config
-        template "elasticsearch.yml.sample", "config/elasticsearch.yml"
-        template "index.yml.sample", "config/index.yml"
-      end
     end
   end
 end
