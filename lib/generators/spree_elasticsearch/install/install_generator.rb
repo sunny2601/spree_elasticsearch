@@ -1,8 +1,15 @@
 module SpreeElasticsearch
   module Generators
     class InstallGenerator < Rails::Generators::Base
+      source_root File.expand_path("../../templates", __FILE__)
+      def add_config
+        template "elasticsearch.yml.sample", "config/elasticsearch.yml"
+        template "index.yml.sample", "config/index.yml"
+        template "mapping.yml.sample", "config/mapping.yml"
+      end
 
       class_option :auto_run_migrations, :type => :boolean, :default => false
+
 
       def add_javascripts
         append_file 'vendor/assets/javascripts/spree/frontend/all.js', "//= require spree/frontend/spree_elasticsearch\n"
@@ -26,6 +33,7 @@ module SpreeElasticsearch
           puts 'Skipping rake db:migrate, don\'t forget to run it!'
         end
       end
+
     end
   end
 end
