@@ -64,27 +64,17 @@ RSpec.configure do |config|
   config.use_transactional_fixtures = false
 
   config.before :all do
+    index_config = Rails.root.join('config/index.yml')
+    mapping_config = Rails.root.join('config/mapping.yml')
+    index_body = YAML.load(ERB.new(index_config.read).result)
+    mapping_body = YAML.load(ERB.new(mapping_config.read).result)
     begin
-      Elasticsearch::Model.client.indices.create index: "#{ENV['RAILS_ENV'] || "development"}_#{Spree::Config.site_name.downcase.gsub " ","_"}"
+      Elasticsearch::Model.client.indices.create index: "#{ENV['RAILS_ENV'] || "development"}_#{Spree::Config.site_name.downcase.gsub " ","_"}", body: index_body
     rescue
     end
-    Elasticsearch::Model.client.indices.put_mapping type: 'product', body: {
-      product: {
-          properties: {
-            name: {
-              type: 'multi_field',
-              fields: {
-                name: { type: 'string', analyzer: 'english', index_options: 'offsets' },
-                na_name: { type: 'string', index: 'not_analyzed' }
-              }
-            },
-            taxons: {
-              type: 'string',
-              index: 'not_analyzed'
-            }
-          }
-        }
-      }
+    mapping_body.each do |mapping|
+      Elasticsearch::Model.client.indices.put_mapping index: "#{ENV['RAILS_ENV'] || "development"}_#{Spree::Config.site_name.downcase.gsub " ","_"}",type: mapping["type"], body: mapping["mapping"]
+    end
   end
 
   # Ensure Suite is set to use transactions for speed.

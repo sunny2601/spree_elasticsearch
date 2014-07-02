@@ -1,0 +1,19 @@
+- spree_class: "Spree::Product"
+  type: 'product'
+  mapping:
+    product:
+      properties:
+        name:
+          type: "multi_field"
+          fields:
+            name:
+              type: "string"
+              analyzer: "english_to_korean_synonym"
+              index_options: "offsets"
+            na_name:
+              type: "string"
+              index: "not_analyzed"
+        taxons:
+          type: "string"
+          index: "not_analyzed"
+
