@@ -106,7 +106,7 @@ RSpec.configure do |config|
   end
 
   config.after :all do
-    Elasticsearch::Model.client.indices.delete index: "#{ENV['RAILS_ENV'] || "development"}_#{Spree::Config.site_name.downcase.gsub " ","_"}"
+    #Elasticsearch::Model.client.indices.delete index: "#{ENV['RAILS_ENV'] || "development"}_#{Spree::Config.site_name.downcase.gsub " ","_"}"
   end
 
   config.fail_fast = ENV['FAIL_FAST'] || false

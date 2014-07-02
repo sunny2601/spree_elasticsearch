@@ -1,0 +1,30 @@
+#If you wish to add your own custom analyzers to elasticsearch
+#modify this file.  The template shown below is what we use in our
+#application
+#analysis:
+#  analyzer:
+#    english_to_korean_synonym:
+#      tokenizer: "standard"
+#      filter:
+#        - "english_possesive_stemmer"
+#        - "lowercase"
+#        - "english_stop"
+#        - "english_keywords"
+#        - "english_stemmer"
+#        - "synonym"
+#  filter:
+#    english_stop:
+#      type: "stop"
+#      stopwords: "_english_"
+#    english_keywords:
+#      type: "keyword_marker"
+#      keywords: "keywords"
+#    english_stemmer:
+#      type: "stemmer"
+#      language: "english"
+#    english_possesive_stemmer:
+#      type: "stemmer"
+#      language: "possesive_english"
+#    synonym:
+#      type: "synonym"
+#      synonyms_path: "analysis/synonyms.txt"
