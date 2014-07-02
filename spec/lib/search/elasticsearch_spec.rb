@@ -51,5 +51,25 @@ describe Spree::Search::Elasticsearch do
       expect(response.to_a.length).to eql(1)
       expect(response.to_a.first).to eql(@product2)
     end
+
+    it "should match the synonym" do
+      search = Spree::Search::Elasticsearch.new(:keywords => "신발", :per_page => "")
+      response = search.retrieve_products
+      expect(response.to_a.length).to eql(2)
+      expect(response.to_a.first).to eql(@product1)
+    end
+
+    it "should match the multiple synonym search" do
+      search = Spree::Search::Elasticsearch.new(:keywords => "남자 신발", :per_page => "")
+      response = search.retrieve_products
+      expect(response.to_a.length).to eql(4)
+    end
+
+    it "should match a name that is a single word in Korean but is multiple words in english" do
+      search = Spree::Search::Elasticsearch.new(:keywords => "휴고보스", :per_page => "")
+      response = search.retrieve_products
+      expect(response.to_a.length).to eql(2)
+    end
+
   end
 end
