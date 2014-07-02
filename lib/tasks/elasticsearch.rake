@@ -24,7 +24,7 @@ namespace :elasticsearch do
     begin
     Spree::Product.__elasticsearch__.client.indices.delete index: INDEX
     Spree::Product.__elasticsearch__.client.indices.create index: INDEX, body: index_body
-    rescue Elasicsearch::Transport::Transport::Errors::BadRequest
+    rescue Elasticsearch::Transport::Transport::Errors::BadRequest
     end
 
     if !mappings.nil?
