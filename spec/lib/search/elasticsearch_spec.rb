@@ -5,6 +5,7 @@ describe Spree::Search::Elasticsearch do
     @product2 = create(:product, :name => "Nike Golf men's Lunar Golf Shoe", :price => 85.00)
     @product3 = create(:product, :name => "BOSS Black by Hugo Boss Men's Cauro Oxford", :price => 166.32)
     @product4 = create(:product, :name => "BOSS Orange by Hugo Boss Men's Ofero Wingtip", :price => 215257)
+    @product5 = create(:product, :name => "New Balance Women's WL801 Sneaker", :price => 56341)
     Spree::Product.__elasticsearch__.client.indices.refresh
   end
 
@@ -12,7 +13,7 @@ describe Spree::Search::Elasticsearch do
     it "should find the women's shoe" do
       searcher = Spree::Search::Elasticsearch.new(:keywords => "women's", :per_page => "")
       response = searcher.retrieve_products
-      expect(response.to_a.length).to eql(1)
+      expect(response.to_a.length).to eql(2)
       expect(response.to_a.first.name).to eql(@product1.name)
     end
 
@@ -20,13 +21,13 @@ describe Spree::Search::Elasticsearch do
       search = Spree::Search::Elasticsearch.new(:keywords => "men's", :per_page => "")
       response = search.retrieve_products
       expect(response.to_a.length).to eql(3)
-      expect(response.to_a.first.name).to eql(@product3.name)
+      expect(response.to_a.first.name).to eql(@product2.name)
     end
 
     it "should find the mens and womens shoes, but the womens shoe should be first" do
       search = Spree::Search::Elasticsearch.new(:keywords => "women's golf shoe", :per_page => "")
       response = search.retrieve_products
-      expect(response.to_a.length).to eql(2)
+      expect(response.to_a.length).to eql(3)
       expect(response.to_a.first.name).to eql(@product1.name)
     end
 
@@ -41,15 +42,15 @@ describe Spree::Search::Elasticsearch do
       search = Spree::Search::Elasticsearch.new(:keywords => "mens", :per_page => "2")
       response = search.retrieve_products
       expect(response.to_a.length).to eql(2)
-      expect(response.to_a.first).to eql(@product3)
-      expect(response.to_a.last).to eql(@product4)
+      expect(response.to_a.first).to eql(@product2)
+      expect(response.to_a.last).to eql(@product3)
     end
 
     it "should return page two of two pages of results" do
       search = Spree::Search::Elasticsearch.new(:keywords => "mens", :per_page => "2", :page => "2")
       response = search.retrieve_products
       expect(response.to_a.length).to eql(1)
-      expect(response.to_a.first).to eql(@product2)
+      expect(response.to_a.first).to eql(@product4)
     end
 
     it "should match the synonym" do
@@ -69,6 +70,12 @@ describe Spree::Search::Elasticsearch do
       search = Spree::Search::Elasticsearch.new(:keywords => "휴고보스", :per_page => "")
       response = search.retrieve_products
       expect(response.to_a.length).to eql(2)
+    end
+
+    it "should match find a match for a partial model number" do
+      search = Spree::Search::Elasticsearch.new(:keywords => "WL80", :per_page => "")
+      response = search.retrieve_products
+      expect(response.to_a.length).to eql(1)
     end
 
   end

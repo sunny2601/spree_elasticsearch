@@ -35,17 +35,29 @@ module Spree
            end
          end
 
-         def build_es_query
-           query = {
-             "query" => {
-               "query_string" => {
-                 "default_field" => "name",
-                 "query" => keywords
-               }
-             }
-           }
-           query
-         end
+        def build_es_query
+          query = {
+            "query" => {
+              "bool" => {
+                "should" => [
+                  {
+                    "query_string" => {
+                      "default_field" => "name",
+                      "query" => keywords
+                    }
+                  },
+                  {
+                    "query_string" => {
+                      "default_field" => "name.edge_name",
+                      "query" => keywords
+                    }
+                  }
+                ]
+              }
+            }
+          }
+          query
+        end
     end
   end
 end

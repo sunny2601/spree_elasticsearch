@@ -7,12 +7,29 @@ settings:
       english_to_korean_synonym:
         tokenizer: "standard"
         filter:
+          - "synonym"
           - "english_possessive_stemmer"
           - "lowercase"
           - "english_stop"
           - "english_keywords"
           - "english_stemmer"
-          - "synonym"
+      english_edge:
+        tokenizer: "english_edge_tokenizer"
+        filter:
+          - "english_possessive_stemmer"
+          - "lowercase"
+          - "english_stop"
+          - "english_keywords"
+          - "english_stemmer"
+          - "name_edge_stop"
+    tokenizer:
+      english_edge_tokenizer:
+        type: "edgeNGram"
+        min_gram: 3
+        max_gram: 10
+        token_chars:
+          - "letter"
+          - "digit"
     filter:
       english_stop:
         type: "stop"
@@ -29,3 +46,7 @@ settings:
       synonym:
         type: "synonym"
         synonyms_path: "analysis/synonyms.txt"
+      name_edge_stop:
+        type: "stop"
+        stopwords_path: "analysis/stopwords.txt"
+
