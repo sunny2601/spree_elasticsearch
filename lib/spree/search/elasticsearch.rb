@@ -6,7 +6,8 @@ module Spree
         curr_page = page || 1
 
         if keywords.nil?
-          @products = @products_scope.includes([:master => :prices])
+          #@products = @products_scope.includes([:master => :prices])
+          @products = @products_scope
         end
         if !@products.nil?
           unless Spree::Config.show_products_without_price
