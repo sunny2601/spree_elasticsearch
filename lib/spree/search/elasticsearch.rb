@@ -24,7 +24,7 @@ module Spree
        protected
          def get_base_scope
            if keywords.nil?
-             base_scope = Spree::Product.active
+             base_scope = Spree::Product.active.descend_by_created_at
              base_scope = base_scope.in_taxon(taxon) unless taxon.blank?
              base_scope = add_search_scopes(base_scope)
              base_scope
