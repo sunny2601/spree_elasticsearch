@@ -35,7 +35,7 @@ namespace :elasticsearch do
         end
       end
     end
-    Spree::Product.all.each do |product|
+    Spree::Product.active.find_each do |product|
       product.save
     end
   end
