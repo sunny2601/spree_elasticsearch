@@ -32,7 +32,6 @@ module Spree
            else
              elasticsearch_query = build_es_query
              base_scope = Spree::Product.es_search(elasticsearch_query)
-             base_scope = base_scope.descend_by_created_at
              base_scope
            end
          end
