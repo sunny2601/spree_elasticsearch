@@ -12,7 +12,7 @@ module Spree
           unless Spree::Config.show_products_without_price
             @products = @products.where("spree_prices.amount IS NOT NULL").where("spree_prices.currency" => Spree::Config[:presentation_currency] || current_currency)
           end
-          @products = @products.select { |product| product.images.lengh > 0 }
+          @products = @products.select { |product| product.images.length > 0 }
         end
         if keywords.nil?
           @products = @products.page(curr_page).per(per_page)
