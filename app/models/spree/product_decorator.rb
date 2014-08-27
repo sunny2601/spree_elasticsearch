@@ -6,6 +6,9 @@ Spree::Product.class_eval do
   document_type 'product'
 
   add_simple_scopes [:descend_by_created_at]
+  add_search_scope :has_images do
+    joins(:variant_images)
+  end
 
   def self.es_search(query)
     response = self.__elasticsearch__.search query
