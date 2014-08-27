@@ -12,7 +12,6 @@ module Spree
           unless Spree::Config.show_products_without_price
             @products = @products.where("spree_prices.amount IS NOT NULL").where("spree_prices.currency" => Spree::Config[:presentation_currency] || current_currency)
           end
-          @products = @products.select { |product| product.images.length > 0 }
         end
         if keywords.nil?
           @products = @products.page(curr_page).per(per_page)
@@ -28,6 +27,7 @@ module Spree
              base_scope = Spree::Product.active
              base_scope = base_scope.in_taxon(taxon) unless taxon.blank?
              base_scope = add_search_scopes(base_scope)
+             base_scope = base_scope.has_images
              base_scope = base_scope.descend_by_created_at
              base_scope
            else
