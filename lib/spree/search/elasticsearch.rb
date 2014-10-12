@@ -29,7 +29,7 @@ module Spree
              # only apply brand filter if this taxon has products with that brand
              base_scope = add_search_scopes(base_scope) unless add_search_scopes(base_scope).empty?
              base_scope = base_scope.has_images
-             base_scope = base_scope.descend_by_created_at
+             #base_scope = base_scope.descend_by_created_at
              base_scope
            else
              elasticsearch_query = build_es_query
