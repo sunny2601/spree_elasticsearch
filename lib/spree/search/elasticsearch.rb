@@ -14,7 +14,14 @@ module Spree
           end
         end
         if keywords.nil?
-          @products = @products.page(curr_page).per(per_page)
+          @products = @products.sort_by{|obj| obj.created_at}.reverse if sort_type == "newest"
+          @products = @products.sort_by{|obj| obj.variants.any? ? obj.variants.first.price : obj.price} if sort_type == "price_asc"
+          @products = @products.sort_by{|obj| obj.variants.any? ? obj.variants.first.price : obj.price}.reverse if sort_type == "price_desc"
+          if no_pagination
+            @products
+          else
+            @products = sort_type.present? ? Kaminari.paginate_array(@products).page(curr_page).per(per_page) : @products.page(curr_page).per(per_page)
+          end
         else
           @products = @products_scope.page(curr_page).per(per_page).records
         end
@@ -49,6 +56,19 @@ module Spree
            }
            query
          end
+
+        def prepare(params)
+          @properties[:taxon] = params[:taxon].blank? ? nil : Spree::Taxon.find(params[:taxon])
+          @properties[:keywords] = params[:keywords]
+          @properties[:search] = params[:search]
+
+          per_page = params[:per_page].to_i
+          @properties[:per_page] = per_page > 0 ? per_page : Spree::Config[:products_per_page]
+          @properties[:page] = (params[:page].to_i <= 0) ? 1 : params[:page].to_i
+          @properties[:sort_type] = params[:sort_type].present? ? params[:sort_type] : ""
+          @properties[:no_pagination] = params[:no_pagination].present? ? params[:no_pagination] : false
+        end
+
     end
   end
 end
