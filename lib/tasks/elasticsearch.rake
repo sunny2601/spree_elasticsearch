@@ -35,7 +35,7 @@ namespace :elasticsearch do
         end
       end
     end
-    Spree::Product.where("updated_at > ?",2.days.ago).find_each do |product|
+    Spree::Product.where(out_of_date_at: nil).find_each do |product|
       product.save
     end
   end
