@@ -24,10 +24,10 @@ module Spree
           when "newest"
             @products = @products.descend_by_created_at
           when "price_asc"
-            @products = @products.order("spree_prices ASC")
+            @products = @products.order("spree_prices.amount ASC")
             #sort_by{|obj| obj.variants.any? ? obj.variants.first.price : obj.price}
           when "price_desc"
-            @products = @products.order("spree_prices DESC")
+            @products = @products.order("spree_prices.amount DESC")
             #@products = @products.sort_by{|obj| obj.variants.any? ? obj.variants.first.price : obj.price}.reverse
           end
 
@@ -44,7 +44,14 @@ module Spree
       def get_base_scope
         if keywords.nil?
           base_scope = Spree::Product.active
-          base_scope = base_scope.in_taxon(taxon) unless taxon.blank?
+          unless taxon.blank?
+            # `in_taxon` sorts by admin taxon order; `in_taxons` doesn't
+            if sort_type.present? and sort_type != "recommended"
+              base_scope = base_scope.in_taxons(taxon)
+            else
+              base_scope.in_taxon(taxon)
+            end
+          end
           base_scope = add_search_scopes(base_scope)
           # filter out products without images
           base_scope = base_scope.has_images
