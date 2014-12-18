@@ -25,15 +25,11 @@ module Spree
             @products = @products.descend_by_created_at
           when "price_asc"
             @products = @products.order("spree_prices.amount ASC")
-            #sort_by{|obj| obj.variants.any? ? obj.variants.first.price : obj.price}
           when "price_desc"
             @products = @products.order("spree_prices.amount DESC")
-            #@products = @products.sort_by{|obj| obj.variants.any? ? obj.variants.first.price : obj.price}.reverse
           end
 
-          if no_pagination
-            @products
-          else
+          unless no_pagination
             @products = sort_type.present? ? Kaminari.paginate_array(@products).page(curr_page).per(per_page) : @products.page(curr_page).per(per_page)
           end
         end
