@@ -7,7 +7,7 @@ Spree::Product.class_eval do
 
   add_simple_scopes [:descend_by_created_at]
   add_search_scope :has_images do
-    joins(:variant_images)
+    joins(master: :images)
   end
 
   def self.es_search(query)

@@ -20,13 +20,17 @@ module Spree
             @products = @products.where("spree_prices.amount IS NOT NULL").where("spree_prices.currency" => Spree::Config[:presentation_currency] || current_currency)
           end
 
+          @products = @products.select("spree_prices.amount, spree_products.*").distinct
+
           case sort_type
           when "newest"
             @products = @products.descend_by_created_at
           when "price_asc"
-            @products = @products.order("spree_prices.amount ASC")
+            @products = @products.ascend_by_master_price
+            #.order("spree_prices.amount ASC")
           when "price_desc"
-            @products = @products.order("spree_prices.amount DESC")
+            @products = @products.descend_by_master_price
+            #.order("spree_prices.amount DESC")
           end
 
           unless no_pagination
