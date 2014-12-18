@@ -34,7 +34,7 @@ module Spree
           end
 
           unless no_pagination
-            @products = sort_type.present? ? Kaminari.paginate_array(@products).page(curr_page).per(per_page) : @products.page(curr_page).per(per_page)
+            @products = @products.page(curr_page).per(per_page)
           end
         end
         @products
