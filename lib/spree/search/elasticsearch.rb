@@ -49,7 +49,7 @@ module Spree
             if sort_type.present? and sort_type != "recommended"
               base_scope = base_scope.in_taxons(taxon)
             else
-              base_scope.in_taxon(taxon)
+              base_scope = base_scope.in_taxon(taxon)
             end
           end
           base_scope = add_search_scopes(base_scope)
