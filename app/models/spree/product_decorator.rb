@@ -10,6 +10,13 @@ Spree::Product.class_eval do
     joins(master: :images)
   end
 
+  add_search_scope :brand do |brand|
+    where("data -> 'brand' = ?", brand)
+  end
+  add_search_scope :merchant do |merchant|
+    where("data -> 'merchant' = ?", merchant)
+  end
+
   def self.es_search(query)
     response = self.__elasticsearch__.search query
     response
