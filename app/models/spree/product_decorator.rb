@@ -14,8 +14,14 @@ Spree::Product.class_eval do
     brand = brand.split(',')
     where("data -> 'brand' IN (?)", brand)
   end
+
   add_search_scope :merchant do |merchant|
     where("data -> 'merchant' = ?", merchant)
+  end
+
+  add_search_scope :in_tag do |tags|
+    joins(:taxons).
+      where(Taxon.table_name => { :id => tags })
   end
 
   def self.es_search(query)
