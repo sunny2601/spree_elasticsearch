@@ -22,15 +22,20 @@ module Spree
 
           @products = @products.select("spree_prices.amount, spree_products.*").distinct
 
+          if price_lte
+            @products = @products.master_price_lte price_lte.to_i
+          end
+          if price_gte
+            @products = @products.master_price_gte price_gte.to_i
+          end
+
           case sort_type
           when "newest"
             @products = @products.descend_by_created_at
           when "price_asc"
             @products = @products.ascend_by_master_price
-            #.order("spree_prices.amount ASC")
           when "price_desc"
             @products = @products.descend_by_master_price
-            #.order("spree_prices.amount DESC")
           end
 
           unless no_pagination
@@ -78,6 +83,8 @@ module Spree
       def prepare_extra_params(params)
         @properties[:sort_type] = params[:sort_type].present? ? params[:sort_type] : ""
         @properties[:no_pagination] = params[:no_pagination].present? ? params[:no_pagination] : false
+        @properties[:price_gte] = params[:price_gte].present? ? params[:price_gte] : false
+        @properties[:price_lte] = params[:price_lte].present? ? params[:price_lte] : false
       end
     end
   end
