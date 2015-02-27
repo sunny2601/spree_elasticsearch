@@ -11,7 +11,8 @@ Spree::Product.class_eval do
   end
 
   add_search_scope :brand do |brand|
-    where("data -> 'brand' = ?", brand)
+    brand = brand.split(',')
+    where("data -> 'brand' IN (?)", brand)
   end
   add_search_scope :merchant do |merchant|
     where("data -> 'merchant' = ?", merchant)
