@@ -19,11 +19,6 @@ Spree::Product.class_eval do
     where("data -> 'merchant' = ?", merchant)
   end
 
-  add_search_scope :in_tag do |tags|
-    joins(:taxons).
-      where(Taxon.table_name => { :id => tags })
-  end
-
   def self.es_search(query)
     response = self.__elasticsearch__.search query
     response
