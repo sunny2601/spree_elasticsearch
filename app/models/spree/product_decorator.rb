@@ -24,17 +24,13 @@ Spree::Product.class_eval do
     response
   end
   def as_indexed_json(options={})
-    if !self.images.empty?
-      image_url = self.images.first.attachment.url
-    end
-    taxons = self.taxons.map { |t| t.name }
-    product = {
+    image_url = images.first.attachment.url unless images.empty?
+    return {
       name: self.name,
-      taxons: taxons,
+      taxons: self.taxons.map(&:name),
       price: self.price,
       image_url: image_url
     }
-    product.to_json
   end
 
   after_commit on: [:create] do
